@@ -1,46 +1,51 @@
 package ru.sbt.mipt.oop;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
-import static ru.sbt.mipt.oop.SensorEventType.LIGHT_ON;
 
-public class Room {
-    private Collection<Light> lights;
-    private Collection<Door> doors;
-    private String name;
+public class Room implements Actionable {
+    private final String type;
+    private final String name;
+    private final Collection<Actionable> devices = new ArrayList<Actionable>();
 
-    public Room(Collection<Light> lights, Collection<Door> doors, String name) {
-        this.lights = lights;
-        this.doors = doors;
+    public Room(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException();
+        }
         this.name = name;
+        this.type = "Room";
+        if (devices != null) {
+            this.devices.addAll(devices);
+        }
     }
 
-    public Collection<Light> getLights() {
-        return lights;
+    public void addDevice(Actionable device) {
+        if (device == null) {
+            throw new IllegalArgumentException();
+        }
+        devices.add(device);
     }
 
-    public Collection<Door> getDoors() {
-        return doors;
+    @Override
+    public void execute(Action action) {
+        if (action == null) {
+            return;
+        }
+        for(Actionable device : devices) {
+            device.execute(action);
+        }
+    }
+
+    public String getType() {
+        return type;
     }
 
     public String getName() {
         return name;
     }
 
-    public void handleLightEvent(SensorEvent event) {
-        for (Light light : this.getLights()) {
-            light.handleEvent(event, this.getName());
-        }
-    }
-
-    public boolean handleDoorEvent(SmartHome smartHome, SensorEvent event) {
-        boolean _check = false;
-        for (Door door : this.getDoors()) {
-            boolean _check1 = door.handleEvent(smartHome, event, this.getName());
-            if (_check1 == true){
-                _check = _check1;
-            }
-        }
-        return _check;
+    public Collection<Actionable> getDevices() {
+        return devices;
     }
 }

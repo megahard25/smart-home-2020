@@ -2,11 +2,14 @@ package ru.sbt.mipt.oop;
 
 import static ru.sbt.mipt.oop.SensorEventType.LIGHT_ON;
 
-public class Light {
+public class Light implements Actionable{
     private boolean isOn;
     private final String id;
 
     public Light(String id, boolean isOn) {
+        if (id == null) {
+            throw new IllegalArgumentException();
+        }
         this.id = id;
         this.isOn = isOn;
     }
@@ -23,15 +26,13 @@ public class Light {
         isOn = on;
     }
 
-    public void handleEvent(SensorEvent event, String roomName) {
-        if (this.getId().equals(event.getObjectId())) {
-            if (event.getType() == LIGHT_ON) {
-                this.setOn(true);
-                System.out.println("Light " + this.getId() + " in room " + roomName + " was turned on.");
-            } else {
-                this.setOn(false);
-                System.out.println("Light " + this.getId() + " in room " + roomName + " was turned off.");
-            }
-        }
+    @Override
+    public void execute(Action action) {
+        if (action == null) return;
+        action.doAction(this);
+    }
+
+    public static String getType(){
+        return "Light";
     }
 }
