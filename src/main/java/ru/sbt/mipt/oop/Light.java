@@ -1,8 +1,10 @@
 package ru.sbt.mipt.oop;
 
+import java.util.Objects;
+
 import static ru.sbt.mipt.oop.SensorEventType.LIGHT_ON;
 
-public class Light {
+public class Light implements Actionable{
     private boolean isOn;
     private final String id;
 
@@ -23,15 +25,22 @@ public class Light {
         isOn = on;
     }
 
-    public void handleEvent(SensorEvent event, String roomName) {
-        if (this.getId().equals(event.getObjectId())) {
-            if (event.getType() == LIGHT_ON) {
-                this.setOn(true);
-                System.out.println("Light " + this.getId() + " in room " + roomName + " was turned on.");
-            } else {
-                this.setOn(false);
-                System.out.println("Light " + this.getId() + " in room " + roomName + " was turned off.");
-            }
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Light light = (Light) o;
+        return isOn == light.isOn &&
+                Objects.equals(id, light.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isOn, id);
+    }
+
+    @Override
+    public void execute(Action action) {
+        action.accept(this);
     }
 }

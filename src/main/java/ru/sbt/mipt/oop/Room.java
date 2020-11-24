@@ -1,10 +1,11 @@
 package ru.sbt.mipt.oop;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import static ru.sbt.mipt.oop.SensorEventType.LIGHT_ON;
 
-public class Room {
+public class Room implements Actionable {
     private Collection<Light> lights;
     private Collection<Door> doors;
     private String name;
@@ -27,20 +28,27 @@ public class Room {
         return name;
     }
 
-    public void handleLightEvent(SensorEvent event) {
-        for (Light light : this.getLights()) {
-            light.handleEvent(event, this.getName());
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return Objects.equals(lights, room.lights) &&
+                Objects.equals(doors, room.doors) &&
+                Objects.equals(name, room.name);
     }
 
-    public boolean handleDoorEvent(SmartHome smartHome, SensorEvent event) {
-        boolean _check = false;
-        for (Door door : this.getDoors()) {
-            boolean _check1 = door.handleEvent(smartHome, event, this.getName());
-            if (_check1 == true){
-                _check = _check1;
-            }
-        }
-        return _check;
+    @Override
+    public int hashCode() {
+        return Objects.hash(lights, doors, name);
     }
+
+    @Override
+    public void execute(Action action) {
+        action.accept(this);
+
+        lights.forEach(light -> light.execute(action));
+        doors.forEach(door -> door.execute(action));
+    }
+
 }
