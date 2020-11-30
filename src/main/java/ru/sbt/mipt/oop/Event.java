@@ -1,5 +1,5 @@
 package ru.sbt.mipt.oop;
 
-public interface Action {
+public interface Event {
     void accept(Object object);
 }

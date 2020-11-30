@@ -10,21 +10,18 @@ public class SignalingDeactivatedState implements SignalingState {
 
     @Override
     public void setActivated(int PIN) {
-        if (PIN == signalization.pin) {
-            signalization.changeState(new SignalingActivatedState(signalization));
-            System.out.println("ACTIVATED");
-        } else {
-            System.out.println("INVALID PIN");
-        }
+        signalization.changeState(new SignalingActivatedState(signalization));
+        signalization.setCode(PIN);
+        System.out.println("Signaling ACTIVATED");
     }
 
     @Override
     public void setDeactivated(int PIN) {
-        System.out.println("ALREADY DEACTIVATED");
+        System.out.println("Signaling already DEACTIVATED");
     }
 
     @Override
-    public void AlarmOn() {
-        System.out.println("LOCKED");
+    public void alarmOn() {
+        System.out.println("Signaling ALARMED");
     }
 }

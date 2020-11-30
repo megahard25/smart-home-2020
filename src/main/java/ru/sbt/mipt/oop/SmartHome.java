@@ -4,34 +4,31 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class SmartHome {
-    ArrayList<Room> rooms;
-    private final int PIN;
+public class SmartHome implements Actionable {
+    Collection<Room> rooms;
     private Signaling signalization;
 
-    public SmartHome(ArrayList<Room> rooms, int PIN) {
-        this.rooms = rooms;
-        this.PIN = PIN;
+    public SmartHome() {
+        rooms = new ArrayList<>();
+        this.signalization = new Signaling();
     }
+
+    public SmartHome(Collection<Room> rooms) {
+        this.rooms = rooms;
+        this.signalization = new Signaling();
+    }
+
 
     public Signaling getSignaling() {
         return signalization;
     }
 
-    public void formSignalizationObj() {
-        signalization = new Signaling(PIN);
-    }
     public void addRoom(Room room) {
         rooms.add(room);
     }
 
     public Collection<Room> getRooms() {
         return rooms;
-    }
-
-    public void handleEvent(Action action) {
-        action.accept(this);
-        rooms.forEach(room -> room.execute(action));
     }
 
     @Override
@@ -45,6 +42,15 @@ public class SmartHome {
     @Override
     public int hashCode() {
         return Objects.hash(rooms);
+    }
+
+    @Override
+    public void execute(Event event) {
+        signalization.execute(event);
+        if (rooms != null) {
+            rooms.forEach(room -> room.execute(event));
+        }
+        event.accept(this);
     }
 
 }

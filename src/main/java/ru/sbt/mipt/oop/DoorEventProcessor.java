@@ -8,7 +8,7 @@ public class DoorEventProcessor implements EventProcessor {
     @Override
     public void processEvent(SmartHome smartHome, SensorEvent event) {
         if (event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED) {
-            smartHome.handleEvent(doorObj -> {
+            smartHome.execute(doorObj -> {
                 if (!(doorObj instanceof Door)) {
                     return;
                 }

@@ -31,14 +31,14 @@ public class HomeBuilder {
         rooms.add(bathroom);
         rooms.add(bedroom);
         rooms.add(hall);
-        SmartHome smartHome = new SmartHome(rooms, 666);
+
+        SmartHome smartHome = new SmartHome(rooms);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonString = gson.toJson(smartHome);
         System.out.println(jsonString);
-        Path path = Paths.get("output.js");
+        Path path = Paths.get("smart-home.js");
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             writer.write(jsonString);
         }
     }
-
 }

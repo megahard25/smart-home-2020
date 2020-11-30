@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SensorEventsManager {
-    private final String[] eventTypes = new String[] { "LightIsOn", "LightIsOff", "DoorIsOpen", "DoorIsClosed", "DoorIsLocked", "DoorIsUnlocked" };
+    private final String[] eventTypes = new String[] { "LightON", "LightOFF", "DoorOPEN", "DoorCLOSE", "DoorLOCK", "DoorUNLOCK" };
 
     private Collection<EventHandler> handlers = new ArrayList<>();
 
@@ -15,7 +15,9 @@ public class SensorEventsManager {
     public void start() {
         CCSensorEvent event = getNextSensorEvent();
         while (event != null) {
+            System.out.println("EVENT: " + event);
             for (EventHandler handler : handlers) {
+                //System.out.println(event);
                 handler.handleEvent(event);
             }
             event = getNextSensorEvent();

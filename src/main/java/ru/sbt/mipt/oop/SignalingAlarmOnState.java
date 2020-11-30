@@ -15,7 +15,7 @@ public class SignalingAlarmOnState implements SignalingState {
 
     @Override
     public void setDeactivated(int PIN) {
-        if (PIN == signalization.pin) {
+        if (signalization.checkPassword(PIN)) {
             signalization.changeState(new SignalingDeactivatedState(signalization));
             System.out.println("DEACTIVATED");
         } else {
@@ -24,7 +24,7 @@ public class SignalingAlarmOnState implements SignalingState {
     }
 
     @Override
-    public void AlarmOn() {
+    public void alarmOn() {
         System.out.println("ALREADY SWITCHED ON");
     }
 }

@@ -6,5 +6,5 @@ public interface SignalingState {
 
     void setDeactivated(int PIN);
 
-    void AlarmOn();
+    void alarmOn();
 }

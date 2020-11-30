@@ -8,6 +8,15 @@ public class CCSensorEvent {
     private final String eventType;
     private final String objectId;
 
+    @Override
+    public String toString() {
+        return "CCSensorEvent{" +
+                "eventType='" + eventType + '\'' +
+                ", objectId='" + objectId + '\'' +
+                '}';
+    }
+
+
     /**
      * Default constructor
      *

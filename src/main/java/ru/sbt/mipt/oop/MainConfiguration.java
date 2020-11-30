@@ -4,7 +4,9 @@ import com.coolcompany.smarthome.events.SensorEventsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,61 +15,68 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
+@ComponentScan
 public class MainConfiguration {
 
     @Bean
     public SmartHome smartHome() {
         HomeReader reader = new JsonHomeReader();
         if(reader != null) {
-            SmartHome smartHome = reader.homeReader("smart-home-1.js");
+            SmartHome smartHome = reader.getSmartHome();
             return smartHome;
         }
         return null;
     }
 
     @Bean
-    public  HashMap<String, SensorEventType> getAdapter(){
-        return  new HashMap<String, SensorEventType>() {
-            {
-                put("LightIsOn", SensorEventType.LIGHT_ON);
-                put("LightIsOff", SensorEventType.LIGHT_OFF);
-                put("DoorIsOpen", SensorEventType.DOOR_OPEN);
-                put("DoorIsClosed", SensorEventType.DOOR_CLOSED);
-            }
-        };
+    Signaling signalization() {
+        Signaling signalization = new Signaling();
+        signalization.changeState(new SignalingDeactivatedState(signalization));
+        return signalization;
     }
 
     @Bean
-    public EventProcessorAdapter doorsEventProcessor(SmartHome smartHome, HashMap<String, SensorEventType> adapter){
-        return new EventProcessorAdapter(new DoorEventProcessor(), smartHome(), adapter);
+    Map<String, SensorEventType> getAdapter() {
+        Map<String, SensorEventType> result = new HashMap<>();
+        result.put("LightON", SensorEventType.LIGHT_ON);
+        result.put("LightOFF", SensorEventType.LIGHT_OFF);
+        result.put("DoorOPEN", SensorEventType.DOOR_OPEN);
+        result.put("DoorCLOSE", SensorEventType.DOOR_CLOSED);
+        result.put("DoorLOCK", SensorEventType.SIGNALIZATION_ACTIVATED);
+        result.put("DoorUNLOCK", SensorEventType.SIGNALIZATION_DEACTIVATED);
+        return result;
+    }
+    @Bean
+    public AdapterNewApi doorsEventAdapter(SmartHome smartHome){
+        return new AdapterNewApi(
+                new AlarmSendMessageDecorator(new AlarmProcessorDecorator(new DoorEventProcessor())),
+                getAdapter(), smartHome);
+    }
+    @Bean
+    public AdapterNewApi hallDoorEventAdapter(SmartHome smartHome){
+        return new AdapterNewApi(
+                new AlarmProcessorDecorator(new HallDoorEventProcessor()),
+                getAdapter(), smartHome);
+    }
+    @Bean
+    public AdapterNewApi lightEventAdapter(SmartHome smartHome){
+        return new AdapterNewApi(new AlarmProcessorDecorator(new LightEventProcessor()), getAdapter(), smartHome);
     }
 
     @Bean
-    public EventProcessorAdapter hallDoorEventProcessor(SmartHome smartHome, HashMap<String, SensorEventType> adapter){
-        return new EventProcessorAdapter(new HallDoorEventProcessor(), smartHome, adapter);
-    }
-    @Bean
-    public EventProcessorAdapter lightEventProcessor(SmartHome smartHome, HashMap<String, SensorEventType> adapter){
-        return  new EventProcessorAdapter(new LightEventProcessor(), smartHome, adapter);
-    }
-    @Bean
-    public Map<String,SensorEventType> getConvertor(){
-        return new HashMap<String, SensorEventType>() {{
-            put("LightIsOn", SensorEventType.LIGHT_ON);
-            put("LightIsOff", SensorEventType.LIGHT_OFF);
-            put("DoorIsOpen", SensorEventType.DOOR_OPEN);
-            put("DoorIsClosed", SensorEventType.DOOR_CLOSED);
-        }};
+    public AdapterNewApi signalizationEventAdapter(SmartHome smartHome) {
+        return new AdapterNewApi(new SignalingEventProcessor(), getAdapter(), smartHome);
     }
 
     @Bean
-    public SensorEventsManager sensorEventsManager(SmartHome smartHome, Collection<EventProcessorAdapter> events) {
-
+    public SensorEventsManager sensorEventsManager(Collection<AdapterNewApi> adapters) {
         SensorEventsManager sensorEventsManager = new SensorEventsManager();
-
-        for (EventProcessorAdapter processEvent : events){
-            sensorEventsManager.registerEventHandler(processEvent);
-        }
+        adapters.forEach(sensorEventsManager::registerEventHandler);
         return sensorEventsManager;
+    }
+
+    @Bean
+    CommandSender commandSender() {
+        return new CommandSenderImpl();
     }
 }

@@ -8,23 +8,24 @@ public class SignalingActivatedState implements SignalingState {
     }
 
     @Override
-    public void setActivated(int pin) {
-        return;
+    public void setActivated(int PIN) {
+        System.out.println("Signaling already ACTIVATED");
     }
 
     @Override
-    public void setDeactivated(int pin) {
-        if (signalization.checkPassword(pin)){
+    public void setDeactivated(int PIN) {
+        if (signalization.checkPassword(PIN)){
             SignalingState deactivateSmartSignalingStatus = new SignalingDeactivatedState(signalization);
             signalization.changeState(deactivateSmartSignalingStatus);
+            System.out.println("Signaling DEACTIVATED");
         }
         else {
-            this.AlarmOn();
+            this.alarmOn();
         }
     }
     @Override
-    public void AlarmOn() {
-        System.out.println("Sending sms");
+    public void alarmOn() {
+        //System.out.println("Sending sms");
         SignalingState signalingSmartSignalingStatus = new SignalingActivatedState(signalization);
         signalization.changeState(signalingSmartSignalingStatus);
     }

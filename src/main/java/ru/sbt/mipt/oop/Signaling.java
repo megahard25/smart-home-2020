@@ -1,12 +1,12 @@
 package ru.sbt.mipt.oop;
 
-public class Signaling {
+public class Signaling implements Actionable {
     private SignalingState signalizationState;
-    final int pin;
+    private int pin;
 
-    public Signaling(int PIN) {
+    public Signaling() {
         signalizationState = new SignalingDeactivatedState(this);
-        this.pin = PIN;
+        pin = 0;
     }
 
     public SignalingState getSignalizationState() {
@@ -21,8 +21,12 @@ public class Signaling {
         return pin;
     }
 
-    public boolean checkPassword(int password){
-        return password==this.pin;
+    void setCode(int PIN) {
+        this.pin = PIN;
+    }
+
+    public boolean checkPassword(int PIN){
+        return PIN == this.getCode();
     }
 
     public void activate(int pin){
@@ -34,6 +38,23 @@ public class Signaling {
     }
 
     public void signaling(){
-        signalizationState.AlarmOn();
+        signalizationState.alarmOn();
+    }
+
+    public boolean isActivated() {
+        return signalizationState instanceof SignalingActivatedState;
+    }
+
+    public boolean isDeactivated() {
+        return signalizationState instanceof SignalingDeactivatedState;
+    }
+
+    public boolean isAlarmed() {
+        return signalizationState instanceof SignalingAlarmOnState;
+    }
+
+    @Override
+    public void execute(Event event) {
+        event.accept(this);
     }
 }

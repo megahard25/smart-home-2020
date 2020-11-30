@@ -1,8 +1,6 @@
 package ru.sbt.mipt.oop;
 import java.util.Objects;
 
-import static ru.sbt.mipt.oop.SensorEventType.DOOR_OPEN;
-
 public class Door implements Actionable{
     private final String id;
     private boolean isOpen;
@@ -38,7 +36,7 @@ public class Door implements Actionable{
         isOpen = open;
     }
     @Override
-    public void execute(Action action) {
-        action.accept(this);
+    public void execute(Event event) {
+        event.accept(this);
     }
 }

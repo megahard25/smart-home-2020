@@ -2,8 +2,6 @@ package ru.sbt.mipt.oop;
 
 import java.util.Objects;
 
-import static ru.sbt.mipt.oop.SensorEventType.LIGHT_ON;
-
 public class Light implements Actionable{
     private boolean isOn;
     private final String id;
@@ -40,7 +38,7 @@ public class Light implements Actionable{
     }
 
     @Override
-    public void execute(Action action) {
-        action.accept(this);
+    public void execute(Event event) {
+        event.accept(this);
     }
 }

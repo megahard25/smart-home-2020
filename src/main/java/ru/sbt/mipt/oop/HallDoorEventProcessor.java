@@ -13,7 +13,7 @@ public class HallDoorEventProcessor implements EventProcessor {
     @Override
     public void processEvent(SmartHome smartHome, SensorEvent event) {
         if (event.getType() == DOOR_CLOSED || event.getType() == DOOR_OPEN) {
-            smartHome.handleEvent(roomObj -> {
+            smartHome.execute(roomObj -> {
                 if (!(roomObj instanceof Room)) {
                     return;
                 }
@@ -30,7 +30,7 @@ public class HallDoorEventProcessor implements EventProcessor {
                         return;
                     }
                     if (event.getType() == DOOR_CLOSED) {
-                        smartHome.handleEvent(lightObj -> {
+                        smartHome.execute(lightObj -> {
                             if (!(lightObj instanceof Light)) {
                                 return;
                             }
