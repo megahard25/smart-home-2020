@@ -8,20 +8,25 @@ public class SmartHome implements Actionable {
     Collection<Room> rooms;
     private Signaling signalization;
 
-    public SmartHome() {
-        rooms = new ArrayList<>();
-        this.signalization = new Signaling();
-    }
+    //public SmartHome() {
+    //    rooms = new ArrayList<>();
+    //    this.signalization = new Signaling();
+    //}
 
-    public SmartHome(Collection<Room> rooms) {
+    public SmartHome(Collection<Room> rooms, Signaling signalization) {
         this.rooms = rooms;
-        this.signalization = new Signaling();
+        this.signalization = signalization;
     }
 
 
-    public Signaling getSignaling() {
-        return signalization;
-    }
+    public void signalizationON(){
+        signalization.signaling();
+    };
+
+    public void signalizationActivate(int PIN){
+        signalization.activate(PIN);
+    };
+
 
     public void addRoom(Room room) {
         rooms.add(room);
@@ -43,6 +48,8 @@ public class SmartHome implements Actionable {
     public int hashCode() {
         return Objects.hash(rooms);
     }
+
+
 
     @Override
     public void execute(Event event) {

@@ -19,7 +19,6 @@ public class AdapterNewApi implements com.coolcompany.smarthome.events.EventHand
     @Override
     public void handleEvent(CCSensorEvent event) {
         SensorEvent sensorEvent = new SensorEvent(mapper.get(event.getEventType()), event.getObjectId());
-        sensorEvent.setPIN(666);
         processor.processEvent(smartHome, sensorEvent);
     }
 }

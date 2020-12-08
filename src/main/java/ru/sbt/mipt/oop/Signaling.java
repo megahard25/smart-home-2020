@@ -4,14 +4,14 @@ public class Signaling implements Actionable {
     private SignalingState signalizationState;
     private int pin;
 
-    public Signaling() {
+    public Signaling(int pin) {
         signalizationState = new SignalingDeactivatedState(this);
-        pin = 0;
+        this.pin = pin;
     }
 
-    public SignalingState getSignalizationState() {
-        return signalizationState;
-    }
+    //public SignalingState getSignalizationState() {
+    //    return signalizationState;
+    //}
 
     public void changeState(SignalingState signalizationState){
         this.signalizationState = signalizationState;

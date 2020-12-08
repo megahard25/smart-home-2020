@@ -11,6 +11,7 @@ public class CommandAlarmOn implements CommandRC{
 
     @Override
     public void handle() {
-        smartHome.getSignaling().getSignalizationState().alarmOn();
+        // smartHome.getSignaling().getSignalizationState().alarmOn();
+        smartHome.signalizationON();
     }
 }

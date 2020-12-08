@@ -32,7 +32,8 @@ public class HomeBuilder {
         rooms.add(bedroom);
         rooms.add(hall);
 
-        SmartHome smartHome = new SmartHome(rooms);
+        Signaling signalization = new Signaling(666);
+        SmartHome smartHome = new SmartHome(rooms, signalization);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonString = gson.toJson(smartHome);
         System.out.println(jsonString);

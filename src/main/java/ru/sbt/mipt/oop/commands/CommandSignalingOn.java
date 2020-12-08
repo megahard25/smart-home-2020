@@ -11,6 +11,7 @@ public class CommandSignalingOn implements CommandRC {
 
     @Override
     public void handle() {
-        smartHome.getSignaling().getSignalizationState().setActivated(123);
+        //smartHome.getSignaling().getSignalizationState().setActivated(123);
+        smartHome.signalizationActivate(123);
     }
 }

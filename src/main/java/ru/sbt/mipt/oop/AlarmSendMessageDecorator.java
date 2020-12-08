@@ -2,8 +2,10 @@ package ru.sbt.mipt.oop;
 
 public class AlarmSendMessageDecorator implements EventProcessor {
     private final EventProcessor handler;
+    private final Notifier notifier;
 
-    public AlarmSendMessageDecorator(EventProcessor handler) {
+    public AlarmSendMessageDecorator(EventProcessor handler, Notifier notifier) {
+        this.notifier = notifier;
         this.handler = handler;
     }
 
@@ -16,7 +18,7 @@ public class AlarmSendMessageDecorator implements EventProcessor {
                 }
                 Signaling signaling = (Signaling) object;
                 if (signaling.isAlarmed() || signaling.isActivated()) {
-                    System.out.println("Send SMS!");
+                    notifier.donotify();
                 }
             });
         }

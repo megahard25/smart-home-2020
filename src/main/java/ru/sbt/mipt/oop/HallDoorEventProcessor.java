@@ -6,8 +6,9 @@ import static ru.sbt.mipt.oop.SensorEventType.DOOR_OPEN;
 public class HallDoorEventProcessor implements EventProcessor {
     private final CommandSender commandSender;
 
-    public HallDoorEventProcessor() {
-        this.commandSender = new CommandSenderImpl();
+    public HallDoorEventProcessor(CommandSender commandSender) {
+        //this.commandSender = new CommandSenderImpl();
+        this.commandSender = commandSender;
     }
 
     @Override
